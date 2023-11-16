@@ -15,6 +15,7 @@ router.post('/add-course', isAdmin, async (req, res) => {
     year,
     faculty,
     room,
+    day,
   });
 
   try {
@@ -22,18 +23,18 @@ router.post('/add-course', isAdmin, async (req, res) => {
 
     return res.status(201).json({ message: 'Course added successfully.', newCourse });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: 'Error adding course.' });
   }
 });
 
 router.get('/courses', authenticateToken, async (req, res) => {
   try {
-    const { year, faculty } = req.query;
+    const { year, faculty, day } = req.query;
 
     const filter = {};
     if (year) filter.year = year;
     if (faculty) filter.faculty = faculty;
+    if (day) filter.day = day;
 
     const courses = await Course.find(filter);
 

@@ -28,6 +28,10 @@ const courseSchema = new Schema({
   room: {
     type: Number,
     required: false,
+  },
+  day: {
+    type: String,
+    required: true
   }
 });
 

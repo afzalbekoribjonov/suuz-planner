@@ -31,18 +31,18 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ message: 'Email already in use. Please choose a different email.' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); 
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       fullName,
       faculty,
       year,
       email,
-      password: hashedPassword, 
+      password: hashedPassword,
     });
 
     await newUser.save();
-    
+
     return res.status(201).json({ message: 'User registered successfully.', newUser });
   } catch (error) {
     console.error(error);
