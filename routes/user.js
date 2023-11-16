@@ -6,6 +6,8 @@ const User = require('../models/User');
 const authenticateToken = require('../middleware/authMiddleware');
 require('dotenv').config();
 
+const jwt_secret_key = process.env.JWT_KEY;
+
 router.post('/register', async (req, res) => {
   const { fullName, faculty, year, email, password } = req.body;
 
@@ -69,9 +71,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Incorrect password.' });
     }
 
-    const token = jwt.sign({ userId: user._id, email: user.email }, "your-secret-key", { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, email: user.email }, jwt_secret_key, { expiresIn: '2h' });
 
-    return res.status(200).json({ message: 'Login successful.', token });
+    return res.status(200).json({ message: 'Login successful.', token, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error during login.' });

@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const ADMIN = "burxon@ug.shardauniversity.uz";
+
+const jwt_secret_key = process.env.JWT_KEY;
+const ADMIN = process.env.ADMIN;
 
 const isAdmin = (req, res, next) => {
     const token = req.header('Authorization');
@@ -10,7 +13,7 @@ const isAdmin = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, "your-secret-key");
+        const decoded = jwt.verify(token, jwt_secret_key);
         if (decoded.email === ADMIN) {
             req.email = decoded.email;
             next();

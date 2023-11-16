@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
-const MONGODB_URL = "mongodb+srv://shardabackend:shardabackend@cluster0.dv9kyuf.mongodb.net/?retryWrites=true&w=majority";
+const MONGODB_URL = process.env.MONGODB_URL;
 
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/course');

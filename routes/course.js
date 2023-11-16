@@ -27,13 +27,47 @@ router.post('/add-course', isAdmin, async (req, res) => {
   }
 });
 
-router.get('/courses', authenticateToken,async (req, res) => {
+router.get('/courses', authenticateToken, async (req, res) => {
   try {
-    const courses = await Course.find();
+    const { year, faculty } = req.query;
+
+    const filter = {};
+    if (year) filter.year = year;
+    if (faculty) filter.faculty = faculty;
+
+    const courses = await Course.find(filter);
+
     return res.status(200).json({ courses });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error fetching courses.' });
+  }
+});
+
+
+router.put('/update-course/:id', isAdmin, async (req, res) => {
+  const courseId = req.params.id;
+  const updateFields = req.body;
+
+  try {
+    const existingCourse = await Course.findById(courseId);
+
+    if (!existingCourse) {
+      return res.status(404).json({ message: 'Course not found.' });
+    }
+
+    for (const key in updateFields) {
+      if (Object.prototype.hasOwnProperty.call(updateFields, key)) {
+        existingCourse[key] = updateFields[key];
+      }
+    }
+
+    const updatedCourse = await existingCourse.save();
+
+    return res.status(200).json({ message: 'Course updated successfully.', updatedCourse });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error updating course.' });
   }
 });
 
