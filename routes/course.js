@@ -5,7 +5,7 @@ const authenticateToken = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.post('/add-course', isAdmin, async (req, res) => {
-  const { time, courseCode, fullName, teacher, year, faculty, room } = req.body;
+  const { time, courseCode, fullName, teacher, year, faculty, room, day } = req.body;
 
   const newCourse = new Course({
     time,
@@ -15,7 +15,7 @@ router.post('/add-course', isAdmin, async (req, res) => {
     year,
     faculty,
     room,
-    day,
+    day
   });
 
   try {
