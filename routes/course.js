@@ -47,10 +47,10 @@ router.get('/courses', authenticateToken, async (req, res) => {
 
 
 router.delete('/delete-course/:courseId', isAdmin, async (req, res) => {
-  const userId = req.params.courseId;
+  const courseId = req.params.courseId;
 
   try {
-    const deletedCourse = await Course.findByIdAndRemove(userId);
+    const deletedCourse = await Course.findByIdAndRemove(courseId);
 
     if (!deletedCourse) {
       return res.status(404).json({ message: 'Course not found' });
