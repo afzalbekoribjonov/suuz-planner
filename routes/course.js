@@ -46,6 +46,24 @@ router.get('/courses', authenticateToken, async (req, res) => {
 });
 
 
+router.delete('/delete-course/:courseId', isAdmin, async (req, res) => {
+  const userId = req.params.courseId;
+
+  try {
+    const deletedCourse = await Course.findByIdAndRemove(userId);
+
+    if (!deletedCourse) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    res.json({ message: 'Course deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 router.put('/update-course/:id', isAdmin, async (req, res) => {
   const courseId = req.params.id;
   const updateFields = req.body;

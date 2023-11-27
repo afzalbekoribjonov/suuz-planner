@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const authenticateToken = require('../middleware/authMiddleware');
+const { isAdmin } = require('../middleware/admin');
+const DeletedUsers = require('../models/DeletedUsers');
 require('dotenv').config();
 
 const jwt_secret_key = process.env.JWT_KEY;
@@ -77,6 +79,54 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error during login.' });
+  }
+});
+
+
+router.delete('/delete-account/:userId', authenticateToken || isAdmin, async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const deletedUser = await User.findByIdAndRemove(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    console.log(deletedUser)
+    const achievedUser = new DeletedUsers({
+      fullName: deletedUser.fullName,
+      faculty: deletedUser.faculty,
+      year: deletedUser.year,
+      email: deletedUser.email,
+      password: deletedUser.password,
+    });
+
+    await achievedUser.save()
+
+    res.json({ message: 'User deleted successfully' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+router.get('/get-deleted-users', isAdmin, async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const users = await DeletedUsers.find();
+
+    if (!users) {
+      return res.status(404).json({ message: 'Deleted users not found' });
+    }
+
+    res.json({ message: 'Deleted account users', users }).status(200);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
