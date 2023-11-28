@@ -41,6 +41,7 @@ router.post('/register', async (req, res) => {
       year,
       email,
       password: hashedPassword,
+      role: "user"
     });
 
     await newUser.save();

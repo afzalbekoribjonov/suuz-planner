@@ -11,6 +11,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/course');
 const newsRouter = require('./routes/news');
+const adminUserRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static('public'));
 app.use('/api/', userRoutes);
 app.use('/api/', adminRoutes);
 app.use('/api/', newsRouter);
+app.use('/api/', adminUserRoutes);
 
 mongoose.set('strictQuery', false);
 
