@@ -84,6 +84,37 @@ router.post('/login', async (req, res) => {
 });
 
 
+router.put('/update-user/:id', authenticateToken, async (req, res) => {
+  const userid = req.params.id;
+  const updateFields = req.body;
+
+  try {
+    const existingUser = await User.findById(userid);
+
+    if (!existingUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    if (userid === req.user._id || isAdmin) {
+      for (const key in updateFields) {
+        if (Object.prototype.hasOwnProperty.call(updateFields, key)) {
+          existingUser[key] = updateFields[key];
+        }
+      }
+
+      const updatedUser = await existingUser.save();
+
+      return res.status(200).json({ message: 'User updated successfully.', updatedUser });
+    } else {
+      return res.status(400).json({ message: 'You can update only your details.' });
+    }
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error updating user.' });
+  }
+});
+
 router.delete('/delete-account/:userId', authenticateToken || isAdmin, async (req, res) => {
   const userId = req.params.userId;
 

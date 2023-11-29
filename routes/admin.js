@@ -22,7 +22,7 @@ router.post("/create-user", isAdmin, async (req, res) => {
 
     if (role.toLowerCase() === 'teacher' || role.toLowerCase() === 'admin') {
         try {
-            const existingUser = await User.findOne({ email });
+            const existingUser = await User.findOne({                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ail });
 
             if (existingUser) {
                 return res.status(409).json({ message: 'Email already in use. Please choose a different email.' });
